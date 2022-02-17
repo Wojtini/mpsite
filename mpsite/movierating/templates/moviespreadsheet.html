@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block content %}
+    <style>
+table#spreadsheet, td {
+  border:2px solid black;
+}
+td a:link {
+  text-decoration: none;
+  color: black;
+}
+
+td a:visited {
+  text-decoration: none;
+  color: black;
+}
+
+td a:hover {
+  text-decoration: none;
+}
+
+td a:active {
+  text-decoration: none;
+}
+</style>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
+<script type="text/javascript">
+
+function calculateGradient(rating){
+    color0 = '#000000'
+    color20 = '#ff0000'
+    color50 = '#efff00'
+    color65 = '#00ff0e'
+    color90 = '#00dadb'
+    color100 = '#ff00ef'
+
+    if (rating >= 90 && rating <= 100){
+        ratio = (rating-90)/(100-90)
+        return getRGB(color90,color100,ratio)
+    } else if (rating >= 65 && rating < 90){
+        ratio = (rating-65)/(90-65)
+        return getRGB(color65,color90,ratio)
+    } else if (rating >= 50 && rating < 65){
+        ratio = (rating-50)/(65-50)
+        return getRGB(color50,color65,ratio)
+    } else if (rating >= 20 && rating < 50){
+        ratio = (rating-20)/(50-20)
+        return getRGB(color20,color50,ratio)
+    } else if (rating >= 0 && rating < 20){
+        ratio = (rating-0)/(20-0)
+        return getRGB(color0,color20,ratio)
+    }
+}
+
+function getRGB(color1,color2,ratio){
+    var r1 = parseInt(color1.substring(1,3),16)
+    var g1 = parseInt(color1.substring(3,5),16)
+    var b1 = parseInt(color1.substring(5,7),16)
+
+    var r2 = parseInt(color2.substring(1,3),16)
+    var g2 = parseInt(color2.substring(3,5),16)
+    var b2 = parseInt(color2.substring(5,7),16)
+
+    var newR = Math.ceil(r1 * (1-ratio) + r2 * ratio)
+    var newG = Math.ceil(g1 * (1-ratio) + g2 * ratio)
+    var newB = Math.ceil(b1 * (1-ratio) + b2 * ratio)
+    var retVal = "rgb(" + newR.toString() + "," + newG.toString() + "," + newB.toString() + ")"
+    return retVal
+}
+
+$(document).ready(function(){
+    $('#spreadsheet td.rating_cell').each(function(){
+        if ($(this).text() != ''){
+            rating = parseInt($(this).text())
+            color = calculateGradient(rating)
+            $(this).css('background-color',color);
+        } else {
+            $(this).css('background-color','black');
+        }
+    });
+});
+
+$(document).ready(function(){
+    $('#ratingscale td.rating_cell').each(function(){
+        if ($(this).text() != ''){
+            rating = parseInt($(this).text())
+            color = calculateGradient(rating)
+            console.log(color)
+            $(this).css('background-color',color);
+        } else {
+            $(this).css('background-color','black');
+        }
+    });
+});
+
+</script>
+
+<center>
+<!--    <li><a href="/movierating/addReview">Dodaj recenzje</a></li>-->
+    <li><a href="/movierating/addMovie">Dodaj film</a></li>
+    <li>To add/modify a review click on movie name in table</li>
+    <br>
+
+    <h3>Gradiencik</h3>
+    <table id="ratingscale">
+        <tr>
+            {% for i in rangetest %}
+                <td class="rating_cell">{{i}}</td>
+                {% if forloop.counter|divisibleby:20 %}
+                    </tr>
+                    <tr>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    </table>
+    <h3>Movie Spreadsheet</h3>
+    <table id="spreadsheet">
+        <tr>
+            <td>Name</td>
+            <td>Genre</td>
+            <td># of watches</td>
+            <td>Rating</td>
+            {% for user in users_list %}
+                <td><b>{{user.username}}</b></td>
+            {% endfor %}
+        </tr>
+        {% for movie in movies_list %}
+            <tr>
+                <td><a href="/movierating/addReview/{{movie.name}}">{{movie.name}}</a></td>
+                <td>{{movie.category_id}}</td>
+                <td>{{movie.number_of_watches}}</td>
+                <td class="rating_cell">{{movie.general_rating}}</td>
+                {% for review in movie.reviews %}
+                    <td class="rating_cell"><b>{{review.rating}}</b></td>
+                {% endfor %}
+    <!--            <td>{{movie.reviews}}</td>-->
+            </tr>
+
+        {% endfor %}
+    </table>
+</center>
+{% endblock %}

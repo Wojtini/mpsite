@@ -1,0 +1,20 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mile Pogawedki</title>
+    <link rel="stylesheet" type="text/css"
+          href="{% static 'style.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+</head>
+
+<body>
+    {% include "navbar.html" %}
+    <div id="main_content">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+
+</html>
