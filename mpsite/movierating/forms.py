@@ -18,6 +18,7 @@ class MovieForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['whoAdded'].disabled = True
+        self.fields['whoAdded'].widget = HiddenInput()
 
 
 class ReviewForm(forms.ModelForm):

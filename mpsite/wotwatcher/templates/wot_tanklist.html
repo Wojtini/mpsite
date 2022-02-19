@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block extrahead %}
+    <link rel="stylesheet" type="text/css"
+            href="{% static 'wot.css' %}">
+{% endblock %}
+
+{% block content %}
+<center>
+    {{sub}}
+    {% for key, value in subs.items %}
+        <h3>{{key}}</h3>
+        <div class="tank_container">
+            {% for tank in value %}
+                <div class="tank_info">
+                    {{tank.tank}} WN8<br>
+                    <div class="wn8" style="background: {{tank.wn8color}};">{{tank.wn8}}</div>
+                    DMG per game: {{tank.data.avgDmg}} ({{tank.data.dif_Dmg}})<br>
+                    FRAG per game: {{tank.data.avgFrag}} ({{tank.data.dif_Frag}})<br>
+                    Winrate: {{tank.data.avgWinRate}} ({{tank.data.dif_expWinRate}})<br>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</center>
+{% endblock %}

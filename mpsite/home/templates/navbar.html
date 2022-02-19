@@ -4,15 +4,23 @@
   <li><a href="/servers">Servers</a></li>
   <li><a href="/personnel">Personnel</a></li>
   <li><a href="/movierating">Movies Repo</a></li>
+  <li><a href="/wotapi">World Of Tanks API thingy</a></li>
 
 
     {% if user.is_authenticated %}
         <div class="nav-user-info">
           <li class="nav-item">
-            <a class="nav-link" href="#">Welcome, {{user.username}}</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/logout">Logout</a>
+
+
+            <div class="dropdown">
+              <span><a class="nav-link" href="#">Welcome, {{user.username}}</a></span>
+              <div class="dropdown-content">
+                <a href="/editprofile">Edit profile</a>
+                <a href="/edituser">Edit user</a>
+                <a class="nav-link" href="/logout">Logout</a>
+              </div>
+            </div>
+
           </li>
         </div>
 

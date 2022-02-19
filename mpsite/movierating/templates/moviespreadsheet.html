@@ -21,6 +21,9 @@ td a:hover {
 td a:active {
   text-decoration: none;
 }
+td {
+    font-size: 18px;
+}
 </style>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
 <script type="text/javascript">
@@ -112,17 +115,22 @@ $(document).ready(function(){
             {% endfor %}
         </tr>
     </table>
+
     <h3>Movie Spreadsheet</h3>
-    <table id="spreadsheet">
+<div class="table-wrapper">
+    <table class="fl-table" id="spreadsheet">
+        <thead>
         <tr>
-            <td>Name</td>
-            <td>Genre</td>
-            <td># of watches</td>
-            <td>Rating</td>
+            <th>Name</th>
+            <th>Genre</th>
+            <th># of watches</th>
+            <th>Rating</th>
             {% for user in users_list %}
-                <td><b>{{user.username}}</b></td>
+                <th><b>{{user.username}}</b></th>
             {% endfor %}
         </tr>
+        </thead>
+        <tbody>
         {% for movie in movies_list %}
             <tr>
                 <td><a href="/movierating/addReview/{{movie.name}}">{{movie.name}}</a></td>
@@ -136,6 +144,8 @@ $(document).ready(function(){
             </tr>
 
         {% endfor %}
+        </tbody>
     </table>
+    </div>
 </center>
 {% endblock %}

@@ -35,6 +35,7 @@ LOGOUT_REDIRECT_URL = '/login'
 INSTALLED_APPS = [
     'home.apps.HomeConfig',
     'movierating.apps.MovieratingConfig',
+    'wotwatcher.apps.WotwatcherConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -74,7 +75,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mpsite.wsgi.application'
 
-
+MEDIA_ROOT = os.path.join(BASE_DIR, '../media')
+MEDIA_URL = '/media/'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 

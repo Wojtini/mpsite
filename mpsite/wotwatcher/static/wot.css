@@ -1,0 +1,20 @@
+.tank_info {
+    border-radius: 5px;
+    font-size: 18px;
+    padding: 10px;
+    background: #212121;
+    color: white;
+}
+
+.tank_container {
+  display: grid;
+  grid-template-columns: 300px 300px 300px;
+  grid-gap: 50px;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 50px;
+}
+
+.wn8 {
+    color: white;
+}

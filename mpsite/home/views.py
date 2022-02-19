@@ -1,17 +1,21 @@
+import random
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
-from .forms import NewUserForm
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import NewUserForm, EditProfileForm, EditUserForm
 from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate
 from django.core.exceptions import ObjectDoesNotExist
-from .models import Profile
+from .models import Profile, Quote
+from movierating.models import Review
+from django.contrib.auth.models import Permission
+
 
 @login_required
 def index(request):
-
     return render(request, "home.html", context={"perm": get_user_permissions(request.user)})
 
 @login_required
@@ -23,13 +27,61 @@ def profile(request, username):
     try:
         user = User.objects.get(username=username)
         profile = Profile.objects.get(user=user)
+        quotes = Quote.objects.filter(user=user)
     except ObjectDoesNotExist:
         return render(request, "error.html")
-    return render(request, "profile.html", context={"profile": profile})
+    return render(request, "profile.html",
+                  context={
+                      "profile": profile,
+                      "quotes": quotes,
+                  })
+
+@login_required
+def edit_profile(request):
+    try:
+        instance = get_object_or_404(Profile, user=request.user)
+        form = EditProfileForm(request.POST or None, instance=instance)
+        if form.is_valid():
+            form.save()
+            return redirect("/editprofile")
+
+        return render(request, "editprofile.html",
+                      context={
+                          'form': form,
+                      })
+    except Exception as Ex:
+        print(Ex)
+
+@login_required
+def edit_user(request):
+    try:
+        user_instance = get_object_or_404(User, id=request.user.id)
+        user_form = EditUserForm(request.POST or None, instance=user_instance)
+        if user_form.is_valid():
+            print('userino')
+            user_form.save()
+            return redirect("/edituser")
+
+        return render(request, "editprofile.html",
+                      context={
+                          'form': user_form
+                      })
+    except Exception as Ex:
+        print(Ex)
 
 @login_required
 def personnel(request):
     all_users = User.objects.values()
+    for user in all_users:
+        quotes = Quote.objects.filter(user=user['id'])
+        if len(quotes) == 0:
+            all_users['quote'] = "No quotes"
+            continue
+        quote = random.choice(quotes)
+        user['quote'] = quote.quote_text
+        all_reviews = Review.objects.select_related().filter(user=user['id'])
+        user['reviews_count'] = len(all_reviews)
+        user['profile'] = Profile.objects.get(user=user['id'])
     return render(request, "personnel.html",
                   context={
                       "all_users_blocks": all_users,
@@ -78,7 +130,6 @@ def logout_request(request):
     messages.info(request, "You have successfully logged out.")
     return redirect("/")
 
-from django.contrib.auth.models import Permission
 
 def get_user_permissions(user):
     if user.is_superuser:

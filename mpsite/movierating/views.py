@@ -49,7 +49,7 @@ def index(request):
 @login_required
 @permission_required('movierating.add_movie', raise_exception=True)
 def addmovierequest(request):
-    form = MovieForm(request.POST or None)
+    form = MovieForm(request.POST or None, initial={"user": request.user})
     if form.is_valid():
         form.save()
         return redirect("/movierating")
