@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.db.models.functions import datetime
+from django.shortcuts import render, redirect
 
 from .forms import WN8Form
 from .wotconnector.wotconnector import get_acc_id, get_vehicle_stats
@@ -56,13 +57,18 @@ def list_menu(request):
         result[sub.wot_username] = []
     for sub in subs:
         try:
-            wn8, data = get_wn8(sub.wot_username, sub.tank)
+            exp_tank = TankExpectations.objects.filter(tank_name=sub.tank)[0]
             dict = {
                 "username": sub.wot_username,
                 "tank": sub.tank.tank_name,
-                "wn8": wn8,
-                "wn8color": get_wn8_color(wn8),
-                "data": data,
+                "wn8": sub.wn8,
+                "wn8color": get_wn8_color(sub.wn8),
+                "avgDmg": sub.dmgPerGame,
+                "avgFrag": sub.fragPerGame,
+                "avgWinRate": sub.winRate,
+                'dif_Dmg': round(sub.dmgPerGame - exp_tank.exp_Damage, 2),
+                'dif_Frag': round(sub.fragPerGame - exp_tank.exp_Frag, 2),
+                'dif_expWinRate': round(sub.winRate - exp_tank.exp_WinRate, 2),
             }
             result[sub.wot_username].append(dict)
         except TypeError:
@@ -71,23 +77,38 @@ def list_menu(request):
         "subs": result,
     })
 
+@login_required
+def update_request(request):
+    subs = TankRatingSubscription.objects.all()
+    for sub in subs:
+        try:
+            wn8, data = get_wn8(sub.wot_username, sub.tank)
+            sub.wn8 = wn8
+            sub.lastUpdate = datetime.datetime.now()
+            sub.dmgPerGame = data['avgDmg']
+            sub.fragPerGame = data['avgFrag']
+            sub.winRate = data['avgWinRate']
+            sub.save()
+        except TypeError:
+            pass
+    return redirect('wotapi:list')
 
 def get_wn8(player, tank):
     try:
         id = get_acc_id(player)
 
-        exp_tank = TankExpectations.objects.filter(tank_name=tank)[0]
-        vehstats = get_vehicle_stats(user_id=id, tank_id=exp_tank.tank_id)
+        model = TankExpectations.objects.filter(tank_name=tank)[0]
+        vehstats = get_vehicle_stats(user_id=id, tank_id=model.tank_id)
 
         wn8 = calculate_wn8(
-            tankId=exp_tank.tank_id,
+            tankId=model.tank_id,
             avgDmg=vehstats['damage_per_game'],
             avgFrag=vehstats['frags_per_game'],
             avgSpot=vehstats['spotted_per_game'],
             avgDef=vehstats['def_per_game'],
             avgWinRate=vehstats['winrate'],
         )
-        model = TankExpectations.objects.filter(tank_id=exp_tank.tank_id)[0]
+
         data = {
             'avgDmg': vehstats['damage_per_game'],
             'avgFrag': vehstats['frags_per_game'],

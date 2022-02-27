@@ -29,11 +29,13 @@ ul li a:hover {
 
 
 body {
-    background: lightgray;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: black;
 }
 
 #main_content {
-    background: darkgray;
+
     width: 75%;
     margin: auto;
     min-width: 1000px;
@@ -68,7 +70,6 @@ body {
 
 .container a {
     text-decoration: none;
-    color: transparent;
 }
 
 .quote {
@@ -120,16 +121,17 @@ body {
 .fl-table td {
     border-right: 1px solid #f8f8f8;
     font-size: 14px;
+
+
 }
 
 .fl-table thead th {
-    color: #ffffff;
     background: #4FC3A1;
+    color: white;
 }
 
 
 .fl-table thead th:nth-child(odd) {
-    color: #ffffff;
     background: #324960;
 }
 

@@ -21,6 +21,11 @@ class TankRatingSubscription(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     wot_username = models.CharField(max_length=150)
     tank = models.ForeignKey(TankExpectations, on_delete=models.CASCADE)
+    wn8 = models.IntegerField(null=False, default=0)
+    lastUpdate = models.DateField(null=True)
+    dmgPerGame = models.IntegerField(null=False, default=0)
+    fragPerGame = models.FloatField(null=False, default=0)
+    winRate = models.FloatField(null=False, default=0)
 
     def __str__(self):
         return f"{self.user} watching {self.wot_username} on {self.tank.tank_name}"

@@ -1,10 +1,10 @@
 {% load static %}
 <ul>
-  <li><a href="/">Home</a></li>
-  <li><a href="/servers">Servers</a></li>
-  <li><a href="/personnel">Personnel</a></li>
-  <li><a href="/movierating">Movies Repo</a></li>
-  <li><a href="/wotapi">World Of Tanks API thingy</a></li>
+  <li><a href="{% url 'home:index' %}">Home</a></li>
+  <li><a href="{% url 'home:servers' %}">Servers</a></li>
+  <li><a href="{% url 'home:personnel' %}">Personnel</a></li>
+  <li><a href="{% url 'movierating:list' %}">Movies Repo</a></li>
+  <li><a href="{% url 'wotapi:list' %}">World Of Tanks API thingy</a></li>
 
 
     {% if user.is_authenticated %}

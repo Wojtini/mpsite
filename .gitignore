@@ -2,3 +2,6 @@
 .idea/
 env/
 start.sh
+media/
+*.pyc
+*.pyo

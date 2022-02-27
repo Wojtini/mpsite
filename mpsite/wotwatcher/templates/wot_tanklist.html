@@ -8,7 +8,7 @@
 
 {% block content %}
 <center>
-    {{sub}}
+    <a href="update">Update</a>
     {% for key, value in subs.items %}
         <h3>{{key}}</h3>
         <div class="tank_container">
@@ -16,9 +16,9 @@
                 <div class="tank_info">
                     {{tank.tank}} WN8<br>
                     <div class="wn8" style="background: {{tank.wn8color}};">{{tank.wn8}}</div>
-                    DMG per game: {{tank.data.avgDmg}} ({{tank.data.dif_Dmg}})<br>
-                    FRAG per game: {{tank.data.avgFrag}} ({{tank.data.dif_Frag}})<br>
-                    Winrate: {{tank.data.avgWinRate}} ({{tank.data.dif_expWinRate}})<br>
+                    DMG per game: {{tank.avgDmg}} ({{tank.dif_Dmg}})<br>
+                    FRAG per game: {{tank.avgFrag}} ({{tank.dif_Frag}})<br>
+                    Winrate: {{tank.avgWinRate}} ({{tank.dif_expWinRate}})<br>
                 </div>
             {% endfor %}
         </div>
