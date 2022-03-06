@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-
 {% load static %}
+
 {% block extrahead %}
     <link rel="stylesheet" type="text/css"
             href="{% static 'wot.css' %}">
@@ -8,10 +8,14 @@
 
 {% block content %}
 <center>
-    <a href="update">Update</a>
+    <aside>
+    <a href="update"><button type="button">Update</button></a>
     {% for key, value in subs.items %}
-        <h3>{{key}}</h3>
-        <div class="tank_container">
+        <button class="tablinks" onclick="openCity(event, '{{key}}')" id="button_{{key}}">{{key}}</button>
+    {% endfor %}
+    </aside>
+    {% for key, value in subs.items %}
+        <div id="{{key}}" class="tank_container">
             {% for tank in value %}
                 <div class="tank_info">
                     {{tank.tank}} WN8<br>
@@ -24,4 +28,6 @@
         </div>
     {% endfor %}
 </center>
+
+<script type="text/javascript" src="{% static 'wot_collapsable.js' %}"></script>
 {% endblock %}

@@ -38,36 +38,32 @@ def profile(request, username):
 
 @login_required
 def edit_profile(request):
-    try:
-        instance = get_object_or_404(Profile, user=request.user)
-        form = EditProfileForm(request.POST or None, instance=instance)
+    instance = get_object_or_404(Profile, user=request.user)
+    form = EditProfileForm(instance=instance)
+
+    if request.POST:
+        form = EditProfileForm(request.POST, request.FILES, instance=instance)
         if form.is_valid():
             form.save()
             return redirect("/editprofile")
 
-        return render(request, "editprofile.html",
-                      context={
-                          'form': form,
-                      })
-    except Exception as Ex:
-        print(Ex)
+    return render(request, "editprofile.html",
+                  context={
+                      'form': form,
+                    })
 
 @login_required
 def edit_user(request):
-    try:
-        user_instance = get_object_or_404(User, id=request.user.id)
-        user_form = EditUserForm(request.POST or None, instance=user_instance)
-        if user_form.is_valid():
-            print('userino')
-            user_form.save()
-            return redirect("/edituser")
+    user_instance = get_object_or_404(User, id=request.user.id)
+    user_form = EditUserForm(request.POST or None, instance=user_instance)
+    if user_form.is_valid():
+        user_form.save()
+        return redirect("/edituser")
 
-        return render(request, "editprofile.html",
-                      context={
-                          'form': user_form
-                      })
-    except Exception as Ex:
-        print(Ex)
+    return render(request, "editprofile.html",
+                  context={
+                      'form': user_form
+                  })
 
 @login_required
 def personnel(request):
@@ -75,10 +71,10 @@ def personnel(request):
     for user in all_users:
         quotes = Quote.objects.filter(user=user['id'])
         if len(quotes) == 0:
-            all_users['quote'] = "No quotes"
-            continue
-        quote = random.choice(quotes)
-        user['quote'] = quote.quote_text
+            user['quote'] = "No quotes"
+        else:
+            quote = random.choice(quotes)
+            user['quote'] = quote.quote_text
         all_reviews = Review.objects.select_related().filter(user=user['id'])
         user['reviews_count'] = len(all_reviews)
         user['profile'] = Profile.objects.get(user=user['id'])

@@ -49,7 +49,7 @@ def add_menu(request):
     # wn8 = calculate_wn8(65329, 2000, 1, 1, 1, 50)
     # return render(request, "wot_addmenu.html", context={'wn8': wn8})
 
-@login_required
+# @login_required
 def list_menu(request):
     subs = TankRatingSubscription.objects.all()
     result = {}

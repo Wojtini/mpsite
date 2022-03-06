@@ -138,3 +138,11 @@ body {
 .fl-table tr:nth-child(even) {
     background: #ABABAB;
 }
+
+#myInput {
+  width: 30%;
+  font-size: 20px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
